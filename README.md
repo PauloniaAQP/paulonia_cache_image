@@ -17,6 +17,8 @@ void main() async{
   runApp(MyApp());
 }
 ```
+In the `init()` function you can initialize the default values of the [Properties of ImageProvider](https://pub.dev/packages/paulonia_cache_image#properties). You can change a value in all Paulonia cache image widgets in your app.
+
 
 Paulonia cache image extends `ImageProvider`, so you can use it with any widget that supports an `ImageProvider` only with the URL. By default, the image is cached in the platform storage:
 ```dart
@@ -40,7 +42,14 @@ Image(
   image: PCacheImage('https://i.imgur.com/jhRBVEp.jpg', enableInMemory: true)
 );
 ```
-
+You can enable in-memory cache in all `PCacheImage` widgets in the `init()` function:
+```dart
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await PCacheImage.init(enableInMemory: true);
+  runApp(MyApp());
+}
+```
 **Use only where your require**. The problem with this approach is the memory usage increase. We recommend use only with images in widgets that run `setState()`, to erase the flicker.
 
 ## CORS on web

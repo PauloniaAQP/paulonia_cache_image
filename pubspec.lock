@@ -72,7 +72,7 @@ packages:
     source: hosted
     version: "5.2.1"
   firebase:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase
       url: "https://pub.dartlang.org"
