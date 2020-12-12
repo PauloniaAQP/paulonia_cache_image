@@ -14,7 +14,8 @@ class InMemoryManager {
   static int _maxInMemoryImages;
 
   /// Initialize the the In-memory manager
-  static void init({int maxInMemoryImages = Constants.INFINITE_IN_MEMORY_IMAGES}){
+  static void init(
+      {int maxInMemoryImages = Constants.INFINITE_IN_MEMORY_IMAGES}) {
     _maxInMemoryImages = maxInMemoryImages;
     _savedImages = List();
   }
@@ -34,7 +35,7 @@ class InMemoryManager {
       ),
       scale: key.imageScale,
     );
-    if(_maxInMemoryImages != 0 && _savedImages.length == _maxInMemoryImages){
+    if (_maxInMemoryImages != 0 && _savedImages.length == _maxInMemoryImages) {
       String removedUrl = _savedImages.removeAt(0);
       _manager.remove(removedUrl);
     }
