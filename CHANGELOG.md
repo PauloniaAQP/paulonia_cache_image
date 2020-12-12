@@ -1,3 +1,7 @@
+## [0.2.1]
+
+- `firebase_storage` updated to `5.2.0`. To use the v4 of `firebase_storage` use the `0.2.0` version
+
 ## [0.2.0]
 
 - Option `maxInMemoryImages` added. With this option you can set a maximum number of stored images in memory.
