@@ -1,3 +1,8 @@
+## [0.2.0]
+
+- Option `maxInMemoryImages` added. With this option you can set a maximum number of stored images in memory.
+- Fixed a bug with `init()` in `PCacheImage`
+
 ## [0.1.0]
 
 - Change default values in `init()` functionality added
