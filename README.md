@@ -50,7 +50,17 @@ void main() async{
   runApp(MyApp());
 }
 ```
-**Use only where your require**. The problem with this approach is the memory usage increase. We recommend use only with images in widgets that run `setState()`, to erase the flicker.
+**Use only where your require**. The problem with this approach is the memory usage increase. We recommend use only with images in widgets that run `setState()`, to erase the flicker. To avoid an uncontrollable memory growth you can set the maximum number of images that to be stored in memory:
+
+```dart
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await PCacheImage.init(enableInMemory: true, maxInMemoryImages: 5);
+  runApp(MyApp());
+}
+```
+
+This functionality works as a queue, to save a new image to memory, the oldest one is deleted.
 
 ## CORS on web
 
@@ -85,6 +95,7 @@ enableCache | Enable or disable the cache | true
 retryDuration | If the download fails, retry after this duration | 2s
 maxRetryDuration | Max accumulated time of retries | 10s
 imageScale | The image scale | 1.0
+maxInMemoryImages | Global variable, sets a max number of images in memory | infinite
 
 ## Author
 

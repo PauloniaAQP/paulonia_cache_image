@@ -25,7 +25,7 @@ class PCacheImageService {
   ///
   /// This function initialize the path of the temporal directory
   /// [proxy] is unused in this service.
-  static void init({String proxy}) async {
+  static Future<void> init({String proxy}) async {
     _tempPath = (await getTemporaryDirectory()).path;
   }
 
@@ -55,7 +55,7 @@ class PCacheImageService {
           file.writeAsBytes(bytes);
         }
       } else {
-        /// TODO
+        /// TODO The image can be downloaded
         return null;
       }
     }

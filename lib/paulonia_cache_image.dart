@@ -10,6 +10,8 @@ import 'package:paulonia_cache_image/hive_cache_image.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
     if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
+import 'InMemoryManager.dart';
+
 class PCacheImage extends ImageProvider<PCacheImage> {
   PCacheImage(
     this.url, {
@@ -55,8 +57,10 @@ class PCacheImage extends ImageProvider<PCacheImage> {
       int retryDuration = Constants.DEFAULT_RETRY_DURATION,
       int maxRetryDuration = Constants.DEFAULT_MAX_RETRY_DURATION,
       bool enableInMemory = Constants.DEFAULT_IN_MEMORY_VALUE,
+      int maxInMemoryImages = Constants.INFINITE_IN_MEMORY_IMAGES,
       String proxy}) async {
-    PCacheImageService.init(proxy: proxy);
+    await PCacheImageService.init(proxy: proxy);
+    InMemoryManager.init(maxInMemoryImages: maxInMemoryImages);
     GlobalValues.globalImageScale = imageScale;
     GlobalValues.globalEnableCacheValue = enableCache;
     GlobalValues.globalRetryDuration = retryDuration;
