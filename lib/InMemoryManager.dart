@@ -17,7 +17,7 @@ class InMemoryManager {
   static void init(
       {int maxInMemoryImages = Constants.INFINITE_IN_MEMORY_IMAGES}) {
     _maxInMemoryImages = maxInMemoryImages;
-    _savedImages = List();
+    _savedImages = [];
   }
 
   /// Get the image
