@@ -1,3 +1,8 @@
+## [0.2.2]
+
+- `firebase_storage` updated to `7.0.0`
+- `firebase` updated to `8.0.0`
+
 ## [0.2.1]
 
 - `firebase_storage` updated to `5.2.0`. To use the v4 of `firebase_storage` use the `0.2.0` version
