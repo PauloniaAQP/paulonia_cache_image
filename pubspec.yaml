@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_storage: ^7.0.0
-  firebase: ^8.0.0
+  firebase: ^7.3.3
   path_provider: ^1.6.27
   hive: ^1.4.4+1
   http: ^0.12.2
