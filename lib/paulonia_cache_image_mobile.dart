@@ -83,7 +83,7 @@ class PCacheImageService {
         totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
       await Future.delayed(_retryDuration).then((_) async {
         try {
-          http.Response response = await http.get(url);
+          http.Response response = await http.get(Uri.parse(url));
           bytes = response.bodyBytes;
         } catch (error) {
           _retryDuration = retryDuration;
