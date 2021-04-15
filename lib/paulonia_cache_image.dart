@@ -20,7 +20,7 @@ class PCacheImage extends ImageProvider<PCacheImage> {
     this.retryDuration,
     this.maxRetryDuration,
     this.enableInMemory,
-  }) : assert(url != null);
+  });
 
   /// The url of the image
   final String url;
@@ -85,11 +85,7 @@ class PCacheImage extends ImageProvider<PCacheImage> {
     if (enableCache! && enableInMemory!) return InMemoryManager.getImage(key);
     return MultiFrameImageStreamCompleter(
       codec: PCacheImageService.getImage(
-        url,
-        retryDuration!,
-        maxRetryDuration!,
-        enableCache!
-      ),
+          url, retryDuration!, maxRetryDuration!, enableCache!),
       scale: key.imageScale!,
     );
   }
