@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 /// This class has all function to download, store and get the images.
 class PCacheImageService {
   /// Temporal directory path
-  static String _tempPath;
+  static late String _tempPath;
 
   /// Codec used to convert the image url to base 64; the id of the images in
   /// the storage.
@@ -25,7 +25,7 @@ class PCacheImageService {
   ///
   /// This function initialize the path of the temporal directory
   /// [proxy] is unused in this service.
-  static Future<void> init({String proxy}) async {
+  static Future<void> init({String? proxy}) async {
     _tempPath = (await getTemporaryDirectory()).path;
   }
 
@@ -56,10 +56,10 @@ class PCacheImageService {
         }
       } else {
         /// TODO The image can be downloaded
-        return null;
+        return PaintingBinding.instance!.instantiateImageCodec(Uint8List(0));
       }
     }
-    return PaintingBinding.instance.instantiateImageCodec(bytes);
+    return PaintingBinding.instance!.instantiateImageCodec(bytes);
   }
 
   /// Downloads the image
@@ -78,7 +78,7 @@ class PCacheImageService {
     int totalTime = 0;
     Uint8List bytes = Uint8List(0);
     Duration _retryDuration = Duration(microseconds: 1);
-    if (Utils.isGsUrl(url)) url = await _getStandardUrlFromGsUrl(url);
+    if (Utils.isGsUrl(url)) url = await (_getStandardUrlFromGsUrl(url));
     while (
         totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
       await Future.delayed(_retryDuration).then((_) async {

@@ -26,19 +26,19 @@ class PCacheImage extends ImageProvider<PCacheImage> {
   final String url;
 
   /// The image scale
-  double imageScale;
+  double? imageScale;
 
   /// Enable or disable the cache.
-  bool enableCache;
+  bool? enableCache;
 
   /// If download fails, retry after this duration
-  Duration retryDuration;
+  Duration? retryDuration;
 
   /// Max accumulated time of retries
-  Duration maxRetryDuration;
+  Duration? maxRetryDuration;
 
   /// Enable the in memory cache
-  bool enableInMemory;
+  bool? enableInMemory;
 
   /// Initialize the cache image package
   ///
@@ -58,7 +58,7 @@ class PCacheImage extends ImageProvider<PCacheImage> {
       int maxRetryDuration = Constants.DEFAULT_MAX_RETRY_DURATION,
       bool enableInMemory = Constants.DEFAULT_IN_MEMORY_VALUE,
       int maxInMemoryImages = Constants.INFINITE_IN_MEMORY_IMAGES,
-      String proxy}) async {
+      String? proxy}) async {
     await PCacheImageService.init(proxy: proxy);
     InMemoryManager.init(maxInMemoryImages: maxInMemoryImages);
     GlobalValues.globalImageScale = imageScale;
@@ -82,11 +82,15 @@ class PCacheImage extends ImageProvider<PCacheImage> {
   @override
   ImageStreamCompleter load(PCacheImage key, DecoderCallback decode) {
     _initializeValues();
-    if (enableCache && enableInMemory) return InMemoryManager.getImage(key);
+    if (enableCache! && enableInMemory!) return InMemoryManager.getImage(key);
     return MultiFrameImageStreamCompleter(
       codec: PCacheImageService.getImage(
-          url, retryDuration, maxRetryDuration, enableCache),
-      scale: key.imageScale,
+        url,
+        retryDuration!,
+        maxRetryDuration!,
+        enableCache!
+      ),
+      scale: key.imageScale!,
     );
   }
 

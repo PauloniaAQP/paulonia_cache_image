@@ -1,3 +1,8 @@
+## [0.3.0]
+
+- Dependencies updated.
+- Null-safety migration.
+
 ## [0.2.2]
 
 - `firebase_storage` updated to `7.0.0`

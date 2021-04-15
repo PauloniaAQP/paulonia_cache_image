@@ -13,7 +13,7 @@ class HiveCacheImage {
   Uint8List binaryImage;
 
   HiveCacheImage({
-    this.url,
-    this.binaryImage,
+    required this.url,
+    required this.binaryImage,
   });
 }

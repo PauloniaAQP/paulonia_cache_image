@@ -14,7 +14,7 @@ class PCacheImageService {
   ///
   /// This proxy is used only with network images in web. This allow to user
   /// to set another entry point to fix the CORS problem with that type of images.
-  static String _proxy;
+  static String? _proxy;
 
   /// Codec used to convert the image url to base 64; the id of the images in
   /// the storage.
@@ -27,7 +27,7 @@ class PCacheImageService {
   ///
   /// This function initialize the [proxy] that the service uses in the
   /// network images.
-  static void init({String proxy}) {
+  static void init({String? proxy}) {
     _proxy = proxy;
   }
 
@@ -37,14 +37,14 @@ class PCacheImageService {
   /// in cache and returns it if [enableCache] is true. If the images is not in cache
   /// then the function download the image and stores in cache if [enableCache]
   /// is true.
-  static Future<ui.Codec> getImage(
+  static Future<ui.Codec?> getImage(
     String url,
     Duration retryDuration,
     Duration maxRetryDuration,
     bool enableCache,
   ) async {
     Uint8List bytes;
-    HiveCacheImage cacheImage = _getHiveImage(url);
+    HiveCacheImage? cacheImage = _getHiveImage(url);
     if (cacheImage == null) {
       bytes = await _downloadImage(
         url,
@@ -82,7 +82,7 @@ class PCacheImageService {
     Duration _retryDuration = Duration(microseconds: 1);
     if (Utils.isGsUrl(url))
       url = await _getStandardUrlFromGsUrl(url);
-    else if (_proxy != null) url = _proxy + url;
+    else if (_proxy != null) url = _proxy! + url;
     while (
         totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
       await Future.delayed(_retryDuration).then((_) async {
@@ -99,7 +99,7 @@ class PCacheImageService {
   }
 
   /// Get the image form the hive storage
-  static HiveCacheImage _getHiveImage(String url) {
+  static HiveCacheImage? _getHiveImage(String url) {
     String id = _stringToBase64.encode(url);
     if (!_cacheBox.containsKey(id)) return null;
     return _cacheBox.get(id);

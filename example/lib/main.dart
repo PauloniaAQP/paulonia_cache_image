@@ -3,7 +3,7 @@ import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await PCacheImage.init(enableInMemory: true);
+  await PCacheImage.init();
   runApp(MyApp());
 }
 
