@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:firebase/firebase.dart' as fb;
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:paulonia_cache_image/constants.dart';
 import 'package:http/http.dart' as http;
@@ -27,8 +28,9 @@ class PCacheImageService {
   ///
   /// This function initialize the [proxy] that the service uses in the
   /// network images.
-  static void init({String? proxy}) {
+  static Future<void> init({String? proxy}) {
     _proxy = proxy;
+    return SynchronousFuture<void>(null);
   }
 
   /// Get the image codec
@@ -37,7 +39,7 @@ class PCacheImageService {
   /// in cache and returns it if [enableCache] is true. If the images is not in cache
   /// then the function download the image and stores in cache if [enableCache]
   /// is true.
-  static Future<ui.Codec?> getImage(
+  static Future<ui.Codec> getImage(
     String url,
     Duration retryDuration,
     Duration maxRetryDuration,
@@ -55,10 +57,11 @@ class PCacheImageService {
         if (enableCache) _saveHiveImage(url, bytes);
       } else {
         /// TODO
-        return null;
+        throw "Image couldn't be downloaded";
       }
-    } else
+    } else {
       bytes = cacheImage.binaryImage;
+    }
     return ui.instantiateImageCodec(bytes);
   }
 
