@@ -10,6 +10,7 @@ import 'constants.dart';
 class InMemoryManager {
   /// Stores the images in memory
   static HashMap<String, ImageStreamCompleter> _manager = HashMap();
+  static HashMap<String, ImageStreamCompleterHandle> _managerHandles = HashMap();
   static late List<String> _savedImages;
   static late int _maxInMemoryImages;
 
@@ -38,9 +39,12 @@ class InMemoryManager {
     if (_maxInMemoryImages != 0 && _savedImages.length == _maxInMemoryImages) {
       String removedUrl = _savedImages.removeAt(0);
       _manager.remove(removedUrl);
+      _managerHandles[removedUrl]?.dispose();
+      _managerHandles.remove(removedUrl);
     }
     _savedImages.add(key.url);
     _manager[key.url] = res;
+    _managerHandles[key.url] = res.keepAlive();
     return res;
   }
 }
