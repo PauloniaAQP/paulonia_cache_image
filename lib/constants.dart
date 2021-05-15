@@ -6,5 +6,7 @@ class Constants {
   static const int DEFAULT_MAX_RETRY_DURATION = 20;
   static const bool DEFAULT_ENABLE_CACHE_VALUE = true;
   static const bool DEFAULT_IN_MEMORY_VALUE = false;
+  static const int DEFAULT_IN_MEMORY_IMAGES = 7;
   static const int INFINITE_IN_MEMORY_IMAGES = 0;
+
 }

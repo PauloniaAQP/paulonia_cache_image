@@ -57,7 +57,7 @@ class PCacheImage extends ImageProvider<PCacheImage> {
       int retryDuration = Constants.DEFAULT_RETRY_DURATION,
       int maxRetryDuration = Constants.DEFAULT_MAX_RETRY_DURATION,
       bool enableInMemory = Constants.DEFAULT_IN_MEMORY_VALUE,
-      int maxInMemoryImages = Constants.INFINITE_IN_MEMORY_IMAGES,
+      int maxInMemoryImages = Constants.DEFAULT_IN_MEMORY_IMAGES,
       String? proxy}) async {
     await PCacheImageService.init(proxy: proxy);
     InMemoryManager.init(maxInMemoryImages: maxInMemoryImages);

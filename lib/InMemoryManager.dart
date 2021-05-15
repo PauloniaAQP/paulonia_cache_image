@@ -36,7 +36,8 @@ class InMemoryManager {
       ),
       scale: key.imageScale!,
     );
-    if (_maxInMemoryImages != 0 && _savedImages.length == _maxInMemoryImages) {
+    if (_maxInMemoryImages != Constants.INFINITE_IN_MEMORY_IMAGES
+              && _savedImages.length == _maxInMemoryImages) {
       String removedUrl = _savedImages.removeAt(0);
       _manager.remove(removedUrl);
       _managerHandles[removedUrl]?.dispose();
