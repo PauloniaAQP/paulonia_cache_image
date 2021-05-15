@@ -1,3 +1,7 @@
+## [0.4.1]
+
+- README.md updated
+
 ## [0.4.0]
 
 - Bug in the image stream fixed #6
