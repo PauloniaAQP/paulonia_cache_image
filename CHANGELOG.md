@@ -1,3 +1,9 @@
+## [0.4.0]
+
+- Bug in the image stream fixed #6
+- Default `maxInMemoryImages` changed from infinite to a static number.
+- Bug on null-safety migration in web fixed. (@ahmednfwela)
+
 ## [0.3.0]
 
 - Dependencies updated.
