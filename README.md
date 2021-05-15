@@ -1,6 +1,6 @@
 # Paulonia Cache Image
 
-Flutter package for download and store images in the cache. It supports in-memory and storage cache in Android, iOS and Web for network and Google Cloud Storage images.
+Flutter package for download and store images in cache. It supports in-memory and storage cache in Android, iOS and Web for network and Google Cloud Storage images.
 
 ![Gif](https://i.imgur.com/AsqxrUz.gif)
 
@@ -95,7 +95,7 @@ enableCache | Enable or disable the cache | true
 retryDuration | If the download fails, retry after this duration | 2s
 maxRetryDuration | Max accumulated time of retries | 10s
 imageScale | The image scale | 1.0
-maxInMemoryImages | Global variable, sets a max number of images in memory | infinite
+maxInMemoryImages | Global variable, sets a max number of images in memory | 7
 
 ## Author
 
