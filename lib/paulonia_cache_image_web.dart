@@ -39,13 +39,13 @@ class PCacheImageService {
   /// in cache and returns it if [enableCache] is true. If the images is not in cache
   /// then the function download the image and stores in cache if [enableCache]
   /// is true.
-  static Future<ui.Codec> getImage(
-    String url,
-    Duration retryDuration,
-    Duration maxRetryDuration,
-    bool enableCache,
-  ) async {
+  static Future<ui.Codec> getImage(String url, Duration retryDuration,
+      Duration maxRetryDuration, bool enableCache,
+      {bool clearImg = false}) async {
     Uint8List bytes;
+    if (clearImg) {
+      await _deleteHiveImage(url);
+    }
     HiveCacheImage? cacheImage = _getHiveImage(url);
     if (cacheImage == null) {
       bytes = await _downloadImage(
@@ -106,6 +106,13 @@ class PCacheImageService {
     String id = _stringToBase64.encode(url);
     if (!_cacheBox.containsKey(id)) return null;
     return _cacheBox.get(id);
+  }
+
+  /// Get the image form the hive storage
+  static Future _deleteHiveImage(String url) {
+    String id = _stringToBase64.encode(url);
+    if (_cacheBox.containsKey(id)) print('hey containskey');
+    return _cacheBox.delete(id);
   }
 
   /// Save the image in the hive storage
