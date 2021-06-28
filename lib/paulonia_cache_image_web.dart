@@ -108,10 +108,9 @@ class PCacheImageService {
     return _cacheBox.get(id);
   }
 
-  /// Get the image form the hive storage
+  /// delete the image form the hive storage
   static Future _deleteHiveImage(String url) {
     String id = _stringToBase64.encode(url);
-    if (_cacheBox.containsKey(id)) print('hey containskey');
     return _cacheBox.delete(id);
   }
 
