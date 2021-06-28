@@ -35,16 +35,16 @@ class PCacheImageService {
   /// in cache and returns it if [enableCache] is true. If the images is not in cache
   /// then the function download the image and stores in cache if [enableCache]
   /// is true.
-  static Future<ui.Codec> getImage(
-    String url,
-    Duration retryDuration,
-    Duration maxRetryDuration,
-    bool enableCache,
-  ) async {
+  static Future<ui.Codec> getImage(String url, Duration retryDuration,
+      Duration maxRetryDuration, bool enableCache,
+      {bool clearImg = false}) async {
     Uint8List bytes;
     String id = _stringToBase64.encode(url);
     String path = _tempPath + '/' + id;
     final File file = File(path);
+    if (clearImg) {
+      await file.deleteSync();
+    }
     if (_fileIsCached(file))
       bytes = file.readAsBytesSync();
     else {
