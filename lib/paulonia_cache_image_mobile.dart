@@ -37,14 +37,14 @@ class PCacheImageService {
   /// is true.
   static Future<ui.Codec> getImage(String url, Duration retryDuration,
       Duration maxRetryDuration, bool enableCache,
-      {bool clearImg = false}) async {
+      {bool clearCacheImage = false}) async {
     Uint8List bytes;
     String id = _stringToBase64.encode(url);
 
     String path = _tempPath + '/' + id;
     final File file = File(path);
 
-    if (clearImg) {
+    if (clearCacheImage) {
        file.deleteSync();
     }
     if (_fileIsCached(file))

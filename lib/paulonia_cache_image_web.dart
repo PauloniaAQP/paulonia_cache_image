@@ -41,10 +41,10 @@ class PCacheImageService {
   /// is true.
   static Future<ui.Codec> getImage(String url, Duration retryDuration,
       Duration maxRetryDuration, bool enableCache,
-      {bool clearImg = false}) async {
+      {bool clearCacheImage = false}) async {
     Uint8List bytes;
     // delete single image from cache
-    if (clearImg) {
+    if (clearCacheImage) {
       await _deleteHiveImage(url);
     }
     HiveCacheImage? cacheImage = _getHiveImage(url);

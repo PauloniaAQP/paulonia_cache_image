@@ -20,8 +20,7 @@ class PCacheImage extends ImageProvider<PCacheImage> {
         this.retryDuration,
         this.maxRetryDuration,
         this.enableInMemory,
-        this.clearImg = false,
-        this.clearMemoryImg = false,
+        this.clearCacheImage = false,
       });
 
   /// The url of the image
@@ -34,10 +33,8 @@ class PCacheImage extends ImageProvider<PCacheImage> {
   bool? enableCache;
 
   /// clear cache.
-  bool clearImg;
+  bool clearCacheImage;
 
-  /// clear image from memory.
-  bool clearMemoryImg;
 
   /// If download fails, retry after this duration
   Duration? retryDuration;
@@ -91,11 +88,11 @@ class PCacheImage extends ImageProvider<PCacheImage> {
   ImageStreamCompleter load(PCacheImage key, DecoderCallback decode) {
     _initializeValues();
     if (enableCache! && enableInMemory!)
-      return InMemoryManager.getImage(key, clearMemoryImg: clearMemoryImg);
+      return InMemoryManager.getImage(key, clearMemoryImg: clearCacheImage);
     return MultiFrameImageStreamCompleter(
       codec: PCacheImageService.getImage(
           url, retryDuration!, maxRetryDuration!, enableCache!,
-          clearImg: clearImg),
+          clearCacheImage: clearCacheImage),
       scale: key.imageScale!,
     );
   }
