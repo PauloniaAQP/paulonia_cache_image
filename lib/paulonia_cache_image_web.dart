@@ -22,7 +22,7 @@ class PCacheImageService {
   static final Codec<String, String> _stringToBase64 = utf8.fuse(base64);
 
   /// Hive box used to store the image as a persistent storage
-  static final _cacheBox = Hive.box(Constants.HIVE_CACHE_IMAGE_BOX);
+  static var _cacheBox = Hive.box(Constants.HIVE_CACHE_IMAGE_BOX);
 
   /// Initialize the service on web
   ///
@@ -43,6 +43,7 @@ class PCacheImageService {
       Duration maxRetryDuration, bool enableCache,
       {bool clearImg = false}) async {
     Uint8List bytes;
+    // delete single image from cache
     if (clearImg) {
       await _deleteHiveImage(url);
     }
@@ -76,10 +77,10 @@ class PCacheImageService {
   /// If the url is a network image and [_proxy] is set, then the function
   /// make the request to the proxy (ex. https://my-proxy.com/http:\\my-image-url.jpg)
   static Future<Uint8List> _downloadImage(
-    String url,
-    Duration retryDuration,
-    Duration maxRetryDuration,
-  ) async {
+      String url,
+      Duration retryDuration,
+      Duration maxRetryDuration,
+      ) async {
     int totalTime = 0;
     Uint8List bytes = Uint8List(0);
     Duration _retryDuration = Duration(microseconds: 1);
@@ -87,7 +88,7 @@ class PCacheImageService {
       url = await _getStandardUrlFromGsUrl(url);
     else if (_proxy != null) url = _proxy! + url;
     while (
-        totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
+    totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
       await Future.delayed(_retryDuration).then((_) async {
         try {
           http.Response response = await http.get(Uri.parse(url));
@@ -130,5 +131,13 @@ class PCacheImageService {
   /// This function get the download url from a Google Cloud Storage url
   static Future<String> _getStandardUrlFromGsUrl(String gsUrl) async {
     return (await fb.storage().refFromURL(gsUrl).getDownloadURL()).toString();
+  }
+
+  /// delete all images from storage
+  static Future<dynamic> clearAllImages() async {
+    await _cacheBox.close();
+    await _cacheBox.deleteFromDisk();
+    _cacheBox = await Hive.openBox(Constants.HIVE_CACHE_IMAGE_BOX);
+    return 'success';
   }
 }
