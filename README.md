@@ -62,6 +62,14 @@ void main() async{
 
 This functionality works as a queue, to save a new image to memory, the oldest one is deleted.
 
+### Clear Entire Cache
+
+There could be situations where you might want to clear the whole cache may be to rebuild the cache again. Calling the following method will empty the cache.
+
+```dart
+await PCacheImage.clearAllCacheImages();
+```
+
 ## CORS on web
 
 On the web when you try to make a request and download an image, it can throw an error with the CORS. Depends on the image type there is a solution:
@@ -96,6 +104,7 @@ retryDuration | If the download fails, retry after this duration | 2s
 maxRetryDuration | Max accumulated time of retries | 10s
 imageScale | The image scale | 1.0
 maxInMemoryImages | Global variable, sets a max number of images in memory | 7
+clearCacheImage | Deletes the image from cache | false
 
 ## Author
 
