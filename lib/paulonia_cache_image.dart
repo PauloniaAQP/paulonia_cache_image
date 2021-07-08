@@ -8,19 +8,20 @@ import 'package:paulonia_cache_image/constants.dart';
 import 'package:paulonia_cache_image/global_values.dart';
 import 'package:paulonia_cache_image/hive_cache_image.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
-    if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
+if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
 import 'InMemoryManager.dart';
 
 class PCacheImage extends ImageProvider<PCacheImage> {
   PCacheImage(
-    this.url, {
-    this.imageScale,
-    this.enableCache,
-    this.retryDuration,
-    this.maxRetryDuration,
-    this.enableInMemory,
-  });
+      this.url, {
+        this.imageScale,
+        this.enableCache,
+        this.retryDuration,
+        this.maxRetryDuration,
+        this.enableInMemory,
+        this.clearCacheImage = false,
+      });
 
   /// The url of the image
   final String url;
@@ -30,6 +31,10 @@ class PCacheImage extends ImageProvider<PCacheImage> {
 
   /// Enable or disable the cache.
   bool? enableCache;
+
+  /// clear cache.
+  bool clearCacheImage;
+
 
   /// If download fails, retry after this duration
   Duration? retryDuration;
@@ -53,12 +58,12 @@ class PCacheImage extends ImageProvider<PCacheImage> {
   /// sends the CORS confirmation to the web app and then sends the image.
   static Future<void> init(
       {double imageScale = Constants.DEFAULT_IMAGE_SCALE,
-      bool enableCache = Constants.DEFAULT_ENABLE_CACHE_VALUE,
-      int retryDuration = Constants.DEFAULT_RETRY_DURATION,
-      int maxRetryDuration = Constants.DEFAULT_MAX_RETRY_DURATION,
-      bool enableInMemory = Constants.DEFAULT_IN_MEMORY_VALUE,
-      int maxInMemoryImages = Constants.DEFAULT_IN_MEMORY_IMAGES,
-      String? proxy}) async {
+        bool enableCache = Constants.DEFAULT_ENABLE_CACHE_VALUE,
+        int retryDuration = Constants.DEFAULT_RETRY_DURATION,
+        int maxRetryDuration = Constants.DEFAULT_MAX_RETRY_DURATION,
+        bool enableInMemory = Constants.DEFAULT_IN_MEMORY_VALUE,
+        int maxInMemoryImages = Constants.DEFAULT_IN_MEMORY_IMAGES,
+        String? proxy}) async {
     await PCacheImageService.init(proxy: proxy);
     InMemoryManager.init(maxInMemoryImages: maxInMemoryImages);
     GlobalValues.globalImageScale = imageScale;
@@ -82,10 +87,12 @@ class PCacheImage extends ImageProvider<PCacheImage> {
   @override
   ImageStreamCompleter load(PCacheImage key, DecoderCallback decode) {
     _initializeValues();
-    if (enableCache! && enableInMemory!) return InMemoryManager.getImage(key);
+    if (enableCache! && enableInMemory!)
+      return InMemoryManager.getImage(key, clearMemoryImg: clearCacheImage);
     return MultiFrameImageStreamCompleter(
       codec: PCacheImageService.getImage(
-          url, retryDuration!, maxRetryDuration!, enableCache!),
+          url, retryDuration!, maxRetryDuration!, enableCache!,
+          clearCacheImage: clearCacheImage),
       scale: key.imageScale!,
     );
   }
@@ -100,5 +107,9 @@ class PCacheImage extends ImageProvider<PCacheImage> {
       maxRetryDuration = Duration(seconds: GlobalValues.globalMaxRetryDuration);
     if (enableInMemory == null)
       enableInMemory = GlobalValues.globalInMemoryValue;
+  }
+
+  static Future clearAllCacheImages() async {
+    return await PCacheImageService.clearAllImages();
   }
 }

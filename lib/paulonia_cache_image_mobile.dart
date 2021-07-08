@@ -35,16 +35,18 @@ class PCacheImageService {
   /// in cache and returns it if [enableCache] is true. If the images is not in cache
   /// then the function download the image and stores in cache if [enableCache]
   /// is true.
-  static Future<ui.Codec> getImage(
-    String url,
-    Duration retryDuration,
-    Duration maxRetryDuration,
-    bool enableCache,
-  ) async {
+  static Future<ui.Codec> getImage(String url, Duration retryDuration,
+      Duration maxRetryDuration, bool enableCache,
+      {bool clearCacheImage = false}) async {
     Uint8List bytes;
     String id = _stringToBase64.encode(url);
+
     String path = _tempPath + '/' + id;
     final File file = File(path);
+
+    if (clearCacheImage) {
+       file.deleteSync();
+    }
     if (_fileIsCached(file))
       bytes = file.readAsBytesSync();
     else {
@@ -71,16 +73,16 @@ class PCacheImageService {
   /// greater than [maxRetryDuration] then the function returns an empty list
   /// of bytes.
   static Future<Uint8List> _downloadImage(
-    String url,
-    Duration retryDuration,
-    Duration maxRetryDuration,
-  ) async {
+      String url,
+      Duration retryDuration,
+      Duration maxRetryDuration,
+      ) async {
     int totalTime = 0;
     Uint8List bytes = Uint8List(0);
     Duration _retryDuration = Duration(microseconds: 1);
     if (Utils.isGsUrl(url)) url = await (_getStandardUrlFromGsUrl(url));
     while (
-        totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
+    totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
       await Future.delayed(_retryDuration).then((_) async {
         try {
           http.Response response = await http.get(Uri.parse(url));
@@ -108,5 +110,12 @@ class PCacheImageService {
   static Future<dynamic> _getStandardUrlFromGsUrl(String gsUrl) async {
     Uri uri = Uri.parse(gsUrl);
     return FirebaseStorage.instance.ref().child(uri.path).getDownloadURL();
+  }
+
+  static  Future<dynamic> clearAllImages() async {
+    Directory directory = await getTemporaryDirectory();
+    directory.deleteSync(recursive: true);
+    _tempPath = (await getTemporaryDirectory()).path;
+    return 'success';
   }
 }
