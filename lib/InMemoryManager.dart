@@ -26,7 +26,11 @@ class InMemoryManager {
   ///
   /// Verifies if the image is in memory cache and returns it. Otherwise it calls
   /// [getImage()] from the service of the platform.
-  static ImageStreamCompleter getImage(PCacheImage key) {
+  static ImageStreamCompleter getImage(PCacheImage key,
+      {bool clearMemoryImg = false}) {
+    // clear the image from memory
+    if (clearMemoryImg) _manager.remove(key.url);
+
     if (_manager.containsKey(key.url)) return _manager[key.url]!;
     ImageStreamCompleter res = MultiFrameImageStreamCompleter(
       codec: PCacheImageService.getImage(

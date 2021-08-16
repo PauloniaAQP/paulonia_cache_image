@@ -1,3 +1,9 @@
+## [0.5.0]
+
+- Boolean added to refresh the cache image. (@chetan-cueclad & @kaumudpa)
+- README updated.
+- Dependencies updated.
+
 ## [0.4.1]
 
 - README.md updated

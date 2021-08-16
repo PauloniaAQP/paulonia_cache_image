@@ -22,7 +22,7 @@ class PCacheImageService {
   static final Codec<String, String> _stringToBase64 = utf8.fuse(base64);
 
   /// Hive box used to store the image as a persistent storage
-  static final _cacheBox = Hive.box(Constants.HIVE_CACHE_IMAGE_BOX);
+  static var _cacheBox = Hive.box(Constants.HIVE_CACHE_IMAGE_BOX);
 
   /// Initialize the service on web
   ///
@@ -39,13 +39,14 @@ class PCacheImageService {
   /// in cache and returns it if [enableCache] is true. If the images is not in cache
   /// then the function download the image and stores in cache if [enableCache]
   /// is true.
-  static Future<ui.Codec> getImage(
-    String url,
-    Duration retryDuration,
-    Duration maxRetryDuration,
-    bool enableCache,
-  ) async {
+  static Future<ui.Codec> getImage(String url, Duration retryDuration,
+      Duration maxRetryDuration, bool enableCache,
+      {bool clearCacheImage = false}) async {
     Uint8List bytes;
+    // delete single image from cache
+    if (clearCacheImage) {
+      await _deleteHiveImage(url);
+    }
     HiveCacheImage? cacheImage = _getHiveImage(url);
     if (cacheImage == null) {
       bytes = await _downloadImage(
@@ -108,6 +109,12 @@ class PCacheImageService {
     return _cacheBox.get(id);
   }
 
+  /// delete the image form the hive storage
+  static Future _deleteHiveImage(String url) {
+    String id = _stringToBase64.encode(url);
+    return _cacheBox.delete(id);
+  }
+
   /// Save the image in the hive storage
   static HiveCacheImage _saveHiveImage(String url, Uint8List image) {
     String id = _stringToBase64.encode(url);
@@ -124,5 +131,13 @@ class PCacheImageService {
   /// This function get the download url from a Google Cloud Storage url
   static Future<String> _getStandardUrlFromGsUrl(String gsUrl) async {
     return (await fb.storage().refFromURL(gsUrl).getDownloadURL()).toString();
+  }
+
+  /// delete all images from storage
+  static Future<dynamic> clearAllImages() async {
+    await _cacheBox.close();
+    await _cacheBox.deleteFromDisk();
+    _cacheBox = await Hive.openBox(Constants.HIVE_CACHE_IMAGE_BOX);
+    return 'success';
   }
 }
