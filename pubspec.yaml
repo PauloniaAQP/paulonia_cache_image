@@ -1,6 +1,6 @@
 name: paulonia_cache_image
 description: Flutter package for cache images in storage or memory from the network or Google Cloud Storage. It supports Android, iOS and Web.
-version: 0.4.1
+version: 0.5.0
 homepage: https://paulonia.dev
 repository: https://github.com/PauloniaAQP/paulonia_cache_image
 
@@ -11,9 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_storage: ^8.0.6
+  firebase_storage: ^10.0.1
   firebase: ^9.0.1
-  path_provider: ^2.0.1
+  path_provider: ^2.0.2
   hive: ^2.0.4
   http: ^0.13.3
 
