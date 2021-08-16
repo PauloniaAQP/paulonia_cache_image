@@ -77,10 +77,10 @@ class PCacheImageService {
   /// If the url is a network image and [_proxy] is set, then the function
   /// make the request to the proxy (ex. https://my-proxy.com/http:\\my-image-url.jpg)
   static Future<Uint8List> _downloadImage(
-      String url,
-      Duration retryDuration,
-      Duration maxRetryDuration,
-      ) async {
+    String url,
+    Duration retryDuration,
+    Duration maxRetryDuration,
+  ) async {
     int totalTime = 0;
     Uint8List bytes = Uint8List(0);
     Duration _retryDuration = Duration(microseconds: 1);
@@ -88,7 +88,7 @@ class PCacheImageService {
       url = await _getStandardUrlFromGsUrl(url);
     else if (_proxy != null) url = _proxy! + url;
     while (
-    totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
+        totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
       await Future.delayed(_retryDuration).then((_) async {
         try {
           http.Response response = await http.get(Uri.parse(url));

@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
-if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
+    if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
 import 'constants.dart';
 
@@ -11,7 +11,7 @@ class InMemoryManager {
   /// Stores the images in memory
   static HashMap<String, ImageStreamCompleter> _manager = HashMap();
   static HashMap<String, ImageStreamCompleterHandle> _managerHandles =
-  HashMap();
+      HashMap();
   static late List<String> _savedImages;
   static late int _maxInMemoryImages;
 
