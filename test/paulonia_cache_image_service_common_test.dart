@@ -7,9 +7,9 @@ void main() {
 
   group('Service functions:', () {
     List<String> validUrls = [
-      'https://i.imgur.com/jhRBVEp.jpg',
-      'https://i.imgur.com/5RhnXjE.jpg',
-      'https://i.imgur.com/inAkwKw.jpg',
+      'https://i.imgur.com/aWLjDHS.jpg',
+      'https://i.imgur.com/5laDaRD.jpg',
+      'https://i.imgur.com/IWA7U8X.jpg',
     ];
 
     test('downloadImage()', () async{
