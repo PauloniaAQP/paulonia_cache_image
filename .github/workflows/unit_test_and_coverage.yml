@@ -27,4 +27,8 @@ jobs:
       runs: lcov --remove ./coverage/lcov.info 'lib/hive_cache_image*' -o ./coverage/lcov.info
     - uses: codecov/codecov-action@v2
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage/lcov.info
+        
+    
+        
