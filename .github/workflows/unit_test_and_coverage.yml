@@ -1,0 +1,31 @@
+name: Running test and uploading coverage
+
+on:
+  pull_request:
+    branches: [ main , dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '11.x'
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: 'stable'
+    - name: Installing dependencies
+      run: |
+        flutter pub get
+        sudo apt-get install -y lcov
+    - name: Running mobile tests
+      run: flutter test --coverage
+    - name: Running web tests
+      run: flutter test --platform chrome
+    - name: Removing files from coverage
+      run: lcov --remove ./coverage/lcov.info 'lib/hive_cache_image*' -o ./coverage/lcov.info
+    - uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage/lcov.info

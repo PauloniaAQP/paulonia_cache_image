@@ -10,6 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:paulonia_cache_image/utils.dart';
 import 'package:http/http.dart' as http;
 
+/// TODO change cachedPaths to a Hive box (persistence)
+
 /// Paulonia cache image service for mobile
 ///
 /// This class has all function to download, store and get the images.
@@ -20,6 +22,10 @@ class PCacheImageService {
   /// Codec used to convert the image url to base 64; the id of the images in
   /// the storage.
   static final Codec<String, String> _stringToBase64 = utf8.fuse(base64);
+
+  /// Used to save the paths to using it on the deletion
+  static final Set<String> _cachedPaths = Set<String>();
+  static Set<String> get cachedPaths => _cachedPaths;
 
   /// Initialize the service on mobile
   ///
@@ -46,23 +52,38 @@ class PCacheImageService {
 
     if (clearCacheImage) {
       file.deleteSync();
+      _cachedPaths.remove(path);
     }
-    if (_fileIsCached(file))
+    if (fileIsCached(file)) {
       bytes = file.readAsBytesSync();
+    }
     else {
-      bytes = await _downloadImage(url, retryDuration, maxRetryDuration);
+      bytes = await downloadImage(url, retryDuration, maxRetryDuration);
       if (bytes.lengthInBytes != 0) {
         if (enableCache) {
-          file.create(recursive: true);
-          file.writeAsBytes(bytes);
+          saveFile(file, bytes);
         }
       } else {
-        /// TODO The image can be downloaded
-        return PaintingBinding.instance!.instantiateImageCodec(Uint8List(0));
+        /// TODO The image can't be downloaded
+        return ui.instantiateImageCodec(Uint8List(0));
       }
     }
-    return PaintingBinding.instance!.instantiateImageCodec(bytes);
+    return ui.instantiateImageCodec(bytes);
   }
+
+  /// Clears all the images from the local storage
+  static Future<void> clearAllImages() async {
+    for (String path in _cachedPaths) {
+      var file = File(path);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    }
+    _cachedPaths.clear();
+  }
+
+  /// Gets the number of cached images in the actual session
+  static int get length => _cachedPaths.length;
 
   /// Downloads the image
   ///
@@ -72,7 +93,8 @@ class PCacheImageService {
   /// after [retryDuration]. If the accumulated time of the retry attempts is
   /// greater than [maxRetryDuration] then the function returns an empty list
   /// of bytes.
-  static Future<Uint8List> _downloadImage(
+  @visibleForTesting
+  static Future<Uint8List> downloadImage(
     String url,
     Duration retryDuration,
     Duration maxRetryDuration,
@@ -87,6 +109,10 @@ class PCacheImageService {
         try {
           http.Response response = await http.get(Uri.parse(url));
           bytes = response.bodyBytes;
+          if (bytes.lengthInBytes <= 0) {
+            _retryDuration = retryDuration;
+            totalTime += retryDuration.inSeconds;
+          }
         } catch (error) {
           _retryDuration = retryDuration;
           totalTime += retryDuration.inSeconds;
@@ -97,11 +123,20 @@ class PCacheImageService {
   }
 
   /// Verifies if [file] is stored on cache
-  static bool _fileIsCached(File file) {
+  @visibleForTesting
+  static bool fileIsCached(File file) {
     if (file.existsSync() && file.lengthSync() > 0) {
       return true;
     }
     return false;
+  }
+
+  /// Saves the file in the local storage
+  @visibleForTesting
+  static void saveFile(File file, Uint8List bytes) {
+    file.create(recursive: true);
+    file.writeAsBytes(bytes);
+    _cachedPaths.add(file.path);
   }
 
   /// Get the network from a [gsUrl]
@@ -110,12 +145,5 @@ class PCacheImageService {
   static Future<dynamic> _getStandardUrlFromGsUrl(String gsUrl) async {
     Uri uri = Uri.parse(gsUrl);
     return FirebaseStorage.instance.ref().child(uri.path).getDownloadURL();
-  }
-
-  static Future<dynamic> clearAllImages() async {
-    Directory directory = await getTemporaryDirectory();
-    directory.deleteSync(recursive: true);
-    _tempPath = (await getTemporaryDirectory()).path;
-    return 'success';
   }
 }
