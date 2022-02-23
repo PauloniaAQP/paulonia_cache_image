@@ -2,7 +2,7 @@ name: Running test and coverage
 
 on:
   pull_request:
-    branches: [ main , dev ]
+    branches: [ master , dev ]
 
 jobs:
   test:
