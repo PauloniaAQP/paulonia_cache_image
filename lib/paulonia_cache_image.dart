@@ -71,7 +71,9 @@ class PCacheImage extends ImageProvider<PCacheImage> {
     GlobalValues.globalMaxRetryDuration = maxRetryDuration;
     GlobalValues.globalInMemoryValue = enableInMemory;
     if (kIsWeb) {
-      Hive..registerAdapter(HiveCacheImageAdapter());
+      if (!Hive.isAdapterRegistered(Constants.HIVE_ADAPTER_ID)) {
+        Hive..registerAdapter(HiveCacheImageAdapter());
+      }
       if (!Hive.isBoxOpen(Constants.HIVE_CACHE_IMAGE_BOX)) {
         await Hive.openBox(Constants.HIVE_CACHE_IMAGE_BOX);
       }
@@ -108,7 +110,13 @@ class PCacheImage extends ImageProvider<PCacheImage> {
       enableInMemory = GlobalValues.globalInMemoryValue;
   }
 
-  static Future clearAllCacheImages() async {
-    return await PCacheImageService.clearAllImages();
+  /// Deletes all the images from local storage cache
+  ///
+  /// Set [eraseMemory] to true to also erase the images from the memory cache
+  static Future<void> clearAllCacheImages({bool eraseMemory = false}) async {
+    if (eraseMemory) {
+      InMemoryManager.clearAllImages();
+    }
+    return PCacheImageService.clearAllImages();
   }
 }

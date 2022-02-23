@@ -1,8 +1,8 @@
-name: Running test and uploading coverage
+name: Running test and coverage
 
 on:
   pull_request:
-    branches: [ main , dev ]
+    branches: [ master , dev ]
 
 jobs:
   test:
@@ -20,12 +20,13 @@ jobs:
         flutter pub get
         sudo apt-get install -y lcov
     - name: Running mobile tests
-      runs: flutter test --coverage
+      run: flutter test --coverage
     - name: Running web tests
-      runs: flutter test --platform chrome
+      run: flutter test --platform chrome
     - name: Removing files from coverage
-      runs: lcov --remove ./coverage/lcov.info 'lib/hive_cache_image*' -o ./coverage/lcov.info
+      run: lcov --remove ./coverage/lcov.info 'lib/hive_cache_image*' -o ./coverage/lcov.info
     - uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage/lcov.info
+        fail_ci_if_error: true

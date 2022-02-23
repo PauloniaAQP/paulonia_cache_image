@@ -23,6 +23,7 @@ class PCacheImageService {
 
   /// Hive box used to store the image as a persistent storage
   static var _cacheBox = Hive.box(Constants.HIVE_CACHE_IMAGE_BOX);
+  static get cacheBox => _cacheBox;
 
   /// Initialize the service on web
   ///
@@ -43,19 +44,18 @@ class PCacheImageService {
       Duration maxRetryDuration, bool enableCache,
       {bool clearCacheImage = false}) async {
     Uint8List bytes;
-    // delete single image from cache
     if (clearCacheImage) {
-      await _deleteHiveImage(url);
+      await deleteHiveImage(url);
     }
-    HiveCacheImage? cacheImage = _getHiveImage(url);
+    HiveCacheImage? cacheImage = getHiveImage(url);
     if (cacheImage == null) {
-      bytes = await _downloadImage(
+      bytes = await downloadImage(
         url,
         retryDuration,
         maxRetryDuration,
       );
       if (bytes.lengthInBytes != 0) {
-        if (enableCache) _saveHiveImage(url, bytes);
+        if (enableCache) saveHiveImage(url, bytes);
       } else {
         /// TODO
         throw "Image couldn't be downloaded";
@@ -65,6 +65,16 @@ class PCacheImageService {
     }
     return ui.instantiateImageCodec(bytes);
   }
+
+  /// delete all images from storage
+  static Future<void> clearAllImages() async {
+    await _cacheBox.close();
+    await _cacheBox.deleteFromDisk();
+    _cacheBox = await Hive.openBox(Constants.HIVE_CACHE_IMAGE_BOX);
+  }
+
+  /// Gets the number of cached images in the actual session
+  static int get length => _cacheBox.length;
 
   /// Downloads the image
   ///
@@ -76,7 +86,8 @@ class PCacheImageService {
   /// of bytes.
   /// If the url is a network image and [_proxy] is set, then the function
   /// make the request to the proxy (ex. https://my-proxy.com/http:\\my-image-url.jpg)
-  static Future<Uint8List> _downloadImage(
+  @visibleForTesting
+  static Future<Uint8List> downloadImage(
     String url,
     Duration retryDuration,
     Duration maxRetryDuration,
@@ -93,6 +104,10 @@ class PCacheImageService {
         try {
           http.Response response = await http.get(Uri.parse(url));
           bytes = response.bodyBytes;
+          if (bytes.lengthInBytes <= 0) {
+            _retryDuration = retryDuration;
+            totalTime += retryDuration.inSeconds;
+          }
         } catch (error) {
           _retryDuration = retryDuration;
           totalTime += retryDuration.inSeconds;
@@ -103,20 +118,23 @@ class PCacheImageService {
   }
 
   /// Get the image form the hive storage
-  static HiveCacheImage? _getHiveImage(String url) {
+  @visibleForTesting
+  static HiveCacheImage? getHiveImage(String url) {
     String id = _stringToBase64.encode(url);
     if (!_cacheBox.containsKey(id)) return null;
     return _cacheBox.get(id);
   }
 
-  /// delete the image form the hive storage
-  static Future _deleteHiveImage(String url) {
+  /// Delete the image form the hive storage
+  @visibleForTesting
+  static Future<void> deleteHiveImage(String url) {
     String id = _stringToBase64.encode(url);
     return _cacheBox.delete(id);
   }
 
   /// Save the image in the hive storage
-  static HiveCacheImage _saveHiveImage(String url, Uint8List image) {
+  @visibleForTesting
+  static HiveCacheImage saveHiveImage(String url, Uint8List image) {
     String id = _stringToBase64.encode(url);
     HiveCacheImage cacheImage = HiveCacheImage(
       url: url,
@@ -131,13 +149,5 @@ class PCacheImageService {
   /// This function get the download url from a Google Cloud Storage url
   static Future<String> _getStandardUrlFromGsUrl(String gsUrl) async {
     return (await fb.storage().refFromURL(gsUrl).getDownloadURL()).toString();
-  }
-
-  /// delete all images from storage
-  static Future<dynamic> clearAllImages() async {
-    await _cacheBox.close();
-    await _cacheBox.deleteFromDisk();
-    _cacheBox = await Hive.openBox(Constants.HIVE_CACHE_IMAGE_BOX);
-    return 'success';
   }
 }

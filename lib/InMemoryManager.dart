@@ -13,7 +13,9 @@ class InMemoryManager {
   static HashMap<String, ImageStreamCompleterHandle> _managerHandles =
       HashMap();
   static late List<String> _savedImages;
+  static List<String> get savedImages => _savedImages;
   static late int _maxInMemoryImages;
+  static int get maxInMemoryImages => _maxInMemoryImages;
 
   /// Initialize the the In-memory manager
   static void init(
@@ -28,9 +30,12 @@ class InMemoryManager {
   /// [getImage()] from the service of the platform.
   static ImageStreamCompleter getImage(PCacheImage key,
       {bool clearMemoryImg = false}) {
-    // clear the image from memory
-    if (clearMemoryImg) _manager.remove(key.url);
-
+    if (clearMemoryImg) {
+      _manager.remove(key.url);
+      _managerHandles[key.url]?.dispose();
+      _managerHandles.remove(key.url);
+      _savedImages.remove(key.url);
+    }
     if (_manager.containsKey(key.url)) return _manager[key.url]!;
     ImageStreamCompleter res = MultiFrameImageStreamCompleter(
       codec: PCacheImageService.getImage(
@@ -53,4 +58,17 @@ class InMemoryManager {
     _managerHandles[key.url] = res.keepAlive();
     return res;
   }
+
+  /// Clears all the cached images
+  static Future<void> clearAllImages() async {
+    _savedImages.clear();
+    _manager.clear();
+    _managerHandles.forEach((key, value) {
+      _managerHandles[key]?.dispose();
+    });
+    _managerHandles.clear();
+  }
+
+  /// Get the number of saved images in memory
+  static int get length => _savedImages.length;
 }
