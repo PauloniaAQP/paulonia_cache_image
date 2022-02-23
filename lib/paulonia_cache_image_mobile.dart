@@ -56,8 +56,7 @@ class PCacheImageService {
     }
     if (fileIsCached(file)) {
       bytes = file.readAsBytesSync();
-    }
-    else {
+    } else {
       bytes = await downloadImage(url, retryDuration, maxRetryDuration);
       if (bytes.lengthInBytes != 0) {
         if (enableCache) {

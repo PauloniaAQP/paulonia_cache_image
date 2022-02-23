@@ -12,6 +12,7 @@ coverage/
 
 # IntelliJ related
 *.iml
+!paulonia_cache_image.iml
 *.ipr
 *.iws
 .idea/

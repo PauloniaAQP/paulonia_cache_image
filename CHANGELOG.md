@@ -1,3 +1,9 @@
+## [1.0.0]
+
+- Test & coverage added
+- Dependencies updated
+- Stable release version
+
 ## [0.5.0]
 
 - Boolean added to refresh the cache image. (@chetan-cueclad & @kaumudpa)
