@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:firebase/firebase.dart' as fb;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:paulonia_cache_image/constants.dart';
@@ -40,8 +39,7 @@ class PCacheImageService {
   /// in cache and returns it if [enableCache] is true. If the images is not in cache
   /// then the function download the image and stores in cache if [enableCache]
   /// is true.
-  static Future<ui.Codec> getImage(String url, Duration retryDuration,
-      Duration maxRetryDuration, bool enableCache,
+  static Future<ui.Codec> getImage(String url, Duration retryDuration, Duration maxRetryDuration, bool enableCache,
       {bool clearCacheImage = false}) async {
     Uint8List bytes;
     if (clearCacheImage) {
@@ -98,8 +96,7 @@ class PCacheImageService {
     if (Utils.isGsUrl(url))
       url = await _getStandardUrlFromGsUrl(url);
     else if (_proxy != null) url = _proxy! + url;
-    while (
-        totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
+    while (totalTime <= maxRetryDuration.inSeconds && bytes.lengthInBytes <= 0) {
       await Future.delayed(_retryDuration).then((_) async {
         try {
           http.Response response = await http.get(Uri.parse(url));
@@ -148,6 +145,9 @@ class PCacheImageService {
   ///
   /// This function get the download url from a Google Cloud Storage url
   static Future<String> _getStandardUrlFromGsUrl(String gsUrl) async {
-    return (await fb.storage().refFromURL(gsUrl).getDownloadURL()).toString();
+    Uri uri = Uri.parse(gsUrl);
+    String bucketName = '${uri.scheme}://${uri.authority}';
+    FirebaseStorage storage = FirebaseStorage.instanceFor(bucket: bucketName);
+    return await storage.ref().child(uri.path).getDownloadURL();
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -10,7 +9,7 @@ import 'package:paulonia_cache_image/constants.dart';
 import 'package:paulonia_cache_image/global_values.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
-if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
+    if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
 class TestCanvas implements Canvas {
   final List<Invocation> invocations = <Invocation>[];
@@ -22,8 +21,7 @@ class TestCanvas implements Canvas {
 }
 
 void main() {
-
-  Future<ui.Codec>  _basicDecoder(Uint8List bytes, {int? cacheWidth, int? cacheHeight, bool? allowUpscaling}) {
+  Future<ui.Codec> _basicDecoder(Uint8List bytes, {int? cacheWidth, int? cacheHeight, bool? allowUpscaling}) {
     return ui.instantiateImageCodec(bytes, allowUpscaling: allowUpscaling ?? false);
   }
 
@@ -89,7 +87,7 @@ void main() {
         PCacheImage image = PCacheImage(url, enableCache: enableCache, enableInMemory: enableInMemory);
         var completer = image.load(image, _basicDecoder);
         completer.addListener(ImageStreamListener(
-              (ImageInfo image, bool synchronousCall) { },
+          (ImageInfo image, bool synchronousCall) {},
           onError: (dynamic error, StackTrace? stackTrace) {
             capturedErrors.add(error);
           },

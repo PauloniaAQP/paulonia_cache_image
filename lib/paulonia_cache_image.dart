@@ -10,8 +10,6 @@ import 'package:paulonia_cache_image/hive_cache_image.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
     if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
-import 'InMemoryManager.dart';
-
 class PCacheImage extends ImageProvider<PCacheImage> {
   PCacheImage(
     this.url, {
@@ -86,13 +84,11 @@ class PCacheImage extends ImageProvider<PCacheImage> {
   }
 
   @override
-  ImageStreamCompleter load(PCacheImage key, DecoderCallback decode) {
+  ImageStreamCompleter loadImage(PCacheImage key, ImageDecoderCallback decode) {
     _initializeValues();
-    if (enableCache! && enableInMemory!)
-      return InMemoryManager.getImage(key, clearMemoryImg: clearCacheImage);
+    if (enableCache! && enableInMemory!) return InMemoryManager.getImage(key, clearMemoryImg: clearCacheImage);
     return MultiFrameImageStreamCompleter(
-      codec: PCacheImageService.getImage(
-          url, retryDuration!, maxRetryDuration!, enableCache!,
+      codec: PCacheImageService.getImage(url, retryDuration!, maxRetryDuration!, enableCache!,
           clearCacheImage: clearCacheImage),
       scale: key.imageScale!,
     );
@@ -102,12 +98,9 @@ class PCacheImage extends ImageProvider<PCacheImage> {
   void _initializeValues() {
     if (imageScale == null) imageScale = GlobalValues.globalImageScale;
     if (enableCache == null) enableCache = GlobalValues.globalEnableCacheValue;
-    if (retryDuration == null)
-      retryDuration = Duration(seconds: GlobalValues.globalRetryDuration);
-    if (maxRetryDuration == null)
-      maxRetryDuration = Duration(seconds: GlobalValues.globalMaxRetryDuration);
-    if (enableInMemory == null)
-      enableInMemory = GlobalValues.globalInMemoryValue;
+    if (retryDuration == null) retryDuration = Duration(seconds: GlobalValues.globalRetryDuration);
+    if (maxRetryDuration == null) maxRetryDuration = Duration(seconds: GlobalValues.globalMaxRetryDuration);
+    if (enableInMemory == null) enableInMemory = GlobalValues.globalInMemoryValue;
   }
 
   /// Deletes all the images from local storage cache
