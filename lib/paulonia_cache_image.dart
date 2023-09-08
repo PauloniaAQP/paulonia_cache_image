@@ -10,8 +10,6 @@ import 'package:paulonia_cache_image/hive_cache_image.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
     if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
-import 'InMemoryManager.dart';
-
 class PCacheImage extends ImageProvider<PCacheImage> {
   PCacheImage(
     this.url, {
@@ -85,7 +83,9 @@ class PCacheImage extends ImageProvider<PCacheImage> {
     return SynchronousFuture<PCacheImage>(this);
   }
 
+  // TODO(chrischv): Replace [DecoderCallback] with [ImageDecoderCallback]
   @override
+  // ignore: deprecated_member_use
   ImageStreamCompleter load(PCacheImage key, DecoderCallback decode) {
     _initializeValues();
     if (enableCache! && enableInMemory!)
