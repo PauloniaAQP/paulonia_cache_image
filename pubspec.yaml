@@ -10,11 +10,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_storage: ^10.2.7
-  firebase: ^9.0.2
-  path_provider: ^2.0.9
-  hive: ^2.0.5
-  http: ^0.13.4
+  firebase_storage: ^11.2.6
+  firebase_core: ^2.15.1
+  path_provider: ^2.1.1
+  hive: ^2.2.3
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
