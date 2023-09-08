@@ -10,7 +10,7 @@ import 'package:paulonia_cache_image/constants.dart';
 import 'package:paulonia_cache_image/global_values.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
-if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
+    if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
 class TestCanvas implements Canvas {
   final List<Invocation> invocations = <Invocation>[];
@@ -22,20 +22,26 @@ class TestCanvas implements Canvas {
 }
 
 void main() {
-
-  Future<ui.Codec>  _basicDecoder(Uint8List bytes, {int? cacheWidth, int? cacheHeight, bool? allowUpscaling}) {
-    return ui.instantiateImageCodec(bytes, allowUpscaling: allowUpscaling ?? false);
+  Future<ui.Codec> _basicDecoder(Uint8List bytes,
+      {int? cacheWidth, int? cacheHeight, bool? allowUpscaling}) {
+    return ui.instantiateImageCodec(bytes,
+        allowUpscaling: allowUpscaling ?? false);
   }
 
   group('Initialize package', () {
     test('with default values', () async {
       await PCacheImage.init();
       expect(GlobalValues.globalImageScale, Constants.DEFAULT_IMAGE_SCALE);
-      expect(GlobalValues.globalEnableCacheValue, Constants.DEFAULT_ENABLE_CACHE_VALUE);
-      expect(GlobalValues.globalRetryDuration, Constants.DEFAULT_RETRY_DURATION);
-      expect(GlobalValues.globalMaxRetryDuration, Constants.DEFAULT_MAX_RETRY_DURATION);
-      expect(GlobalValues.globalInMemoryValue, Constants.DEFAULT_IN_MEMORY_VALUE);
-      expect(InMemoryManager.maxInMemoryImages, Constants.DEFAULT_IN_MEMORY_IMAGES);
+      expect(GlobalValues.globalEnableCacheValue,
+          Constants.DEFAULT_ENABLE_CACHE_VALUE);
+      expect(
+          GlobalValues.globalRetryDuration, Constants.DEFAULT_RETRY_DURATION);
+      expect(GlobalValues.globalMaxRetryDuration,
+          Constants.DEFAULT_MAX_RETRY_DURATION);
+      expect(
+          GlobalValues.globalInMemoryValue, Constants.DEFAULT_IN_MEMORY_VALUE);
+      expect(InMemoryManager.maxInMemoryImages,
+          Constants.DEFAULT_IN_MEMORY_IMAGES);
       if (kIsWeb) {
         expect(Hive.isBoxOpen(Constants.HIVE_CACHE_IMAGE_BOX), isTrue);
         expect(Hive.isAdapterRegistered(17), isTrue);
@@ -85,11 +91,13 @@ void main() {
       expect(PCacheImageService.length, equals(0));
       expect(InMemoryManager.length, equals(0));
 
-      void loadImage(String url, {bool enableCache = true, bool enableInMemory = false}) {
-        PCacheImage image = PCacheImage(url, enableCache: enableCache, enableInMemory: enableInMemory);
+      void loadImage(String url,
+          {bool enableCache = true, bool enableInMemory = false}) {
+        PCacheImage image = PCacheImage(url,
+            enableCache: enableCache, enableInMemory: enableInMemory);
         var completer = image.load(image, _basicDecoder);
         completer.addListener(ImageStreamListener(
-              (ImageInfo image, bool synchronousCall) { },
+          (ImageInfo image, bool synchronousCall) {},
           onError: (dynamic error, StackTrace? stackTrace) {
             capturedErrors.add(error);
           },

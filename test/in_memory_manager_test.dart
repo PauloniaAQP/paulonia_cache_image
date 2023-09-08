@@ -3,7 +3,6 @@ import 'package:paulonia_cache_image/InMemoryManager.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 
 void main() {
-
   group('In memory manager functions:', () {
     List<String> validUrls = [
       'https://i.imgur.com/jhRBVEp.jpg',
@@ -67,5 +66,4 @@ void main() {
       expect(InMemoryManager.savedImages.last, equals(validUrls.last));
     });
   });
-
 }

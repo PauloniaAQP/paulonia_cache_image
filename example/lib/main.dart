@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PCacheImage.init();
   runApp(MyApp());
@@ -52,10 +52,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>{
-
-
-  void initState(){
+class _MyHomePageState extends State<MyHomePage> {
+  void initState() {
     super.initState();
   }
 
@@ -64,17 +62,20 @@ class _MyHomePageState extends State<MyHomePage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(widget.title, style: TextStyle(color: Colors.black),),
+        title: Text(
+          widget.title,
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.refresh, color: Colors.black,),
-        backgroundColor: Colors.white,
-        onPressed: (){
-          setState(() {
-
-          });
-        }
-      ),
+          child: Icon(
+            Icons.refresh,
+            color: Colors.black,
+          ),
+          backgroundColor: Colors.white,
+          onPressed: () {
+            setState(() {});
+          }),
       body: ListView(
         children: [
           ListTile(
@@ -85,7 +86,8 @@ class _MyHomePageState extends State<MyHomePage>{
             child: Card(
               elevation: 10,
               child: Image(
-                image: PCacheImage('https://i.imgur.com/jhRBVEp.jpg', enableInMemory: true),
+                image: PCacheImage('https://i.imgur.com/jhRBVEp.jpg',
+                    enableInMemory: true),
               ),
             ),
           ),
@@ -97,7 +99,9 @@ class _MyHomePageState extends State<MyHomePage>{
             child: Card(
               elevation: 10,
               child: Image(
-                image: PCacheImage('https://i.imgur.com/5RhnXjE.jpg',),
+                image: PCacheImage(
+                  'https://i.imgur.com/5RhnXjE.jpg',
+                ),
               ),
             ),
           ),
@@ -109,14 +113,13 @@ class _MyHomePageState extends State<MyHomePage>{
             child: Card(
               elevation: 10,
               child: Image(
-                image: PCacheImage('https://i.imgur.com/inAkwKw.jpg', enableCache: false),
+                image: PCacheImage('https://i.imgur.com/inAkwKw.jpg',
+                    enableCache: false),
               ),
             ),
           ),
         ],
       ),
     );
-
   }
-
 }

@@ -8,10 +8,11 @@ import 'package:paulonia_cache_image/paulonia_cache_image.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
 void main() {
-
   group('Web service functions:', () {
-    test('Hive CRUD: saveHiveImage(), getHiveImage(), deleteHiveImage(), clearAllImages()', () async{
-      Uint8List randomBytes = Uint8List.fromList([0,0,1,0,1]);
+    test(
+        'Hive CRUD: saveHiveImage(), getHiveImage(), deleteHiveImage(), clearAllImages()',
+        () async {
+      Uint8List randomBytes = Uint8List.fromList([0, 0, 1, 0, 1]);
       await PCacheImage.init();
 
       expect(PCacheImageService.cacheBox.isEmpty, isTrue);
@@ -34,5 +35,4 @@ void main() {
       expect(PCacheImageService.cacheBox.isEmpty, isTrue);
     });
   });
-
 }
