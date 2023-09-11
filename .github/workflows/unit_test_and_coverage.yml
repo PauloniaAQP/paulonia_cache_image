@@ -22,7 +22,7 @@ jobs:
     - name: Running analyzer
       run: flutter analyze
     - name: Running formatter
-      run: flutter format --set-exit-if-changed .
+      run: dart format --set-exit-if-changed .
     - name: Running mobile tests
       run: flutter test --coverage
     - name: Running web tests
