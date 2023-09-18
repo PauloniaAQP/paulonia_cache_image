@@ -141,8 +141,7 @@ class PCacheImageService {
   /// Get the network from a [gsUrl]
   ///
   /// This function get the download url from a Google Cloud Storage url
-  static Future<dynamic> _getStandardUrlFromGsUrl(String gsUrl) async {
-    Uri uri = Uri.parse(gsUrl);
-    return FirebaseStorage.instance.ref().child(uri.path).getDownloadURL();
+  static Future<String> _getStandardUrlFromGsUrl(String gsUrl) async {
+    return FirebaseStorage.instance.refFromURL(gsUrl).getDownloadURL();
   }
 }
