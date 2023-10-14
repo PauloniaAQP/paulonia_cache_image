@@ -1,7 +1,5 @@
-# Paulonia Cache Image (with null safety)
+# Paulonia Cache Image
 [![codecov](https://codecov.io/gh/PauloniaAQP/paulonia_cache_image/branch/master/graph/badge.svg?token=UIMGQXYSFU)](https://codecov.io/gh/PauloniaAQP/paulonia_cache_image) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-
-**Null safety:** This package supports [Null safety](https://pub.dev/packages/paulonia_cache_image/versions) but due to an error the null-safety badge is not placed ([Explanation](https://github.com/PauloniaAQP/paulonia_cache_image/issues/14#issuecomment-939391483)).
 
 Flutter package for download and store images in cache. It supports in-memory and storage cache in Android, iOS and Web for network and Google Cloud Storage images.
 

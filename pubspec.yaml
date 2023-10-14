@@ -20,5 +20,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  path_provider_platform_interface: ^2.1.1
+  plugin_platform_interface: ^2.1.6
 
 flutter:
