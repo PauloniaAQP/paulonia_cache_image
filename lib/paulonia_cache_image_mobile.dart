@@ -151,6 +151,7 @@ class PCacheImageService {
           '1NzMxNDI2*_ga_CW55HF8NVT*MTY5NzMwMzY3My4zMTYuMS4xNjk3MzA2MzYzLjUy'
           'LjAuMA..';
     }
+    // coverage:ignore-line
     return FirebaseStorage.instance.refFromURL(gsUrl).getDownloadURL();
   }
 }
