@@ -1,3 +1,7 @@
+## [1.1.0]
+
+- Dependencies updated to run with Flutter 3.13.
+
 ## [1.0.0]
 
 - Test & coverage added

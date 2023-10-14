@@ -19,6 +19,12 @@ jobs:
       run: |
         flutter pub get
         sudo apt-get install -y lcov
+    - name: Running analyzer
+      run: flutter analyze
+    - name: Running formatter
+      run: dart format --set-exit-if-changed .
+    - name: Pre-testing
+      run: mkdir temporaryPath/
     - name: Running mobile tests
       run: flutter test --coverage
     - name: Running web tests

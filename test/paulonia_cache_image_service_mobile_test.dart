@@ -3,18 +3,34 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
+import 'utils.dart';
 
 void main() {
-
   group('Mobile service functions:', () {
+    setUp(() async {
+      PathProviderPlatform.instance = FakePathProviderPlatform();
+    });
+
     File validFile = File('./test/data/testText.txt');
 
     test('fileIsCached()', () {
       File invalidFile = File('');
       expect(PCacheImageService.fileIsCached(validFile), isTrue);
       expect(PCacheImageService.fileIsCached(invalidFile), isFalse);
+    });
+
+    test('downloadImage() with gs url', () async {
+      final String gsUrl = "gs://test-project-a9ddddd6.appspot.com/images/test";
+      var bytes = await PCacheImageService.downloadImage(
+        gsUrl,
+        Duration(seconds: 1),
+        Duration(seconds: 3),
+      );
+      expect(bytes.lengthInBytes != 0, isTrue);
     });
 
     test('saveFile() & clearAllImages()', () async {
@@ -24,7 +40,9 @@ void main() {
       String path = tempPath + '/pcacheImageTestFile';
       File file = File(path);
       PCacheImageService.saveFile(file, validFile.readAsBytesSync());
-      await file.length(); /// To re sync with the file
+      await file.length();
+
+      /// To re sync with the file
       expect(file.existsSync(), isTrue);
       expect(file.lengthSync(), validFile.lengthSync());
       expect(PCacheImageService.cachedPaths.length, 1);
@@ -34,7 +52,5 @@ void main() {
       expect(file.existsSync(), isFalse);
       expect(PCacheImageService.cachedPaths, isEmpty);
     });
-
   });
-
 }

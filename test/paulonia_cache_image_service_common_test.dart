@@ -1,18 +1,24 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
-if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
+    if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
+
+import 'utils.dart';
 
 void main() {
-
   group('Service functions:', () {
+    setUp(() async {
+      PathProviderPlatform.instance = FakePathProviderPlatform();
+    });
+
     List<String> validUrls = [
       'https://i.imgur.com/aWLjDHS.jpg',
       'https://i.imgur.com/5laDaRD.jpg',
       'https://i.imgur.com/IWA7U8X.jpg',
     ];
 
-    test('downloadImage()', () async{
+    test('downloadImage() with network url', () async {
       String invalidUrl = 'https://i.imgur.com/in.jpg';
 
       for (String testUrl in validUrls) {
@@ -36,6 +42,7 @@ void main() {
       await PCacheImage.init();
 
       expect(PCacheImageService.length, equals(0));
+
       /// Without cache
       await PCacheImageService.getImage(
         validUrls.first,
@@ -47,14 +54,14 @@ void main() {
 
       /// Normal behaviour
       for (int i = 0; i < validUrls.length; i++) {
-         var codec = await PCacheImageService.getImage(
-           validUrls[i],
-           Duration(seconds: 1),
-           Duration(seconds: 5),
-           true,
-         );
-         expect(codec.frameCount, equals(1));
-         expect(PCacheImageService.length, equals(i + 1));
+        var codec = await PCacheImageService.getImage(
+          validUrls[i],
+          Duration(seconds: 1),
+          Duration(seconds: 5),
+          true,
+        );
+        expect(codec.frameCount, equals(1));
+        expect(PCacheImageService.length, equals(i + 1));
       }
 
       /// Cached image
@@ -89,7 +96,5 @@ void main() {
       /// To clear the cache for other tests
       await PCacheImageService.clearAllImages();
     });
-
   });
-
 }

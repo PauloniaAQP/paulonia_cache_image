@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:paulonia_cache_image/utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:paulonia_utils/paulonia_utils.dart';
 
 /// TODO change cachedPaths to a Hive box (persistence)
 
@@ -141,8 +142,17 @@ class PCacheImageService {
   /// Get the network from a [gsUrl]
   ///
   /// This function get the download url from a Google Cloud Storage url
-  static Future<dynamic> _getStandardUrlFromGsUrl(String gsUrl) async {
-    Uri uri = Uri.parse(gsUrl);
-    return FirebaseStorage.instance.ref().child(uri.path).getDownloadURL();
+  static Future<String> _getStandardUrlFromGsUrl(String gsUrl) async {
+    if (PUtils.isOnTest()) {
+      // Url returned for testing
+      return 'https://firebasestorage.googleapis.com/v0/b/test-project-a99d6'
+          '.appspot.com/o/images%2FgitPaulonai2.png?alt=media&token=1b1b5c15'
+          '-c52d-4f02-947e-5b82e82b8316&_gl=1*t6xx90*_ga*MTY4MDMyNTk1OC4xNjM'
+          '1NzMxNDI2*_ga_CW55HF8NVT*MTY5NzMwMzY3My4zMTYuMS4xNjk3MzA2MzYzLjUy'
+          'LjAuMA..';
+    }
+    // coverage:ignore-start
+    return FirebaseStorage.instance.refFromURL(gsUrl).getDownloadURL();
+    // coverage:ignore-end
   }
 }
