@@ -11,7 +11,6 @@ import 'utils.dart';
 
 void main() {
   group('Mobile service functions:', () {
-
     setUp(() async {
       PathProviderPlatform.instance = FakePathProviderPlatform();
     });
