@@ -23,6 +23,8 @@ jobs:
       run: flutter analyze
     - name: Running formatter
       run: dart format --set-exit-if-changed .
+    - name: Pre-testing
+      run: mkdir temporaryPath/
     - name: Running mobile tests
       run: flutter test --coverage
     - name: Running web tests
