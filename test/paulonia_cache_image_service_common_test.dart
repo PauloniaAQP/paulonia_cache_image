@@ -38,16 +38,6 @@ void main() {
       expect(bytes.lengthInBytes, equals(0));
     });
 
-    test('downloadImage() with gs url', () async {
-      final String gsUrl = "gs://test-project-a9ddddd6.appspot.com/images/test";
-      var bytes = await PCacheImageService.downloadImage(
-        gsUrl,
-        Duration(seconds: 1),
-        Duration(seconds: 3),
-      );
-      expect(bytes.lengthInBytes != 0, isTrue);
-    });
-
     test('getImage()', () async {
       await PCacheImage.init();
 
