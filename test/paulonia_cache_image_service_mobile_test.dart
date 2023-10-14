@@ -3,11 +3,19 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
+import 'utils.dart';
 
 void main() {
   group('Mobile service functions:', () {
+
+    setUp(() async {
+      PathProviderPlatform.instance = FakePathProviderPlatform();
+    });
+
     File validFile = File('./test/data/testText.txt');
 
     test('fileIsCached()', () {

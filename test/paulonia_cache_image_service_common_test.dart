@@ -1,10 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
     if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
 
+import 'utils.dart';
+
 void main() {
   group('Service functions:', () {
+    setUp(() async {
+      PathProviderPlatform.instance = FakePathProviderPlatform();
+    });
+
     List<String> validUrls = [
       'https://i.imgur.com/aWLjDHS.jpg',
       'https://i.imgur.com/5laDaRD.jpg',

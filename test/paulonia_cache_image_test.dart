@@ -8,8 +8,11 @@ import 'package:paulonia_cache_image/InMemoryManager.dart';
 import 'package:paulonia_cache_image/constants.dart';
 import 'package:paulonia_cache_image/global_values.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image_mobile.dart'
     if (dart.library.html) 'package:paulonia_cache_image/paulonia_cache_image_web.dart';
+
+import 'utils.dart';
 
 class TestCanvas implements Canvas {
   final List<Invocation> invocations = <Invocation>[];
@@ -21,6 +24,10 @@ class TestCanvas implements Canvas {
 }
 
 void main() {
+  setUp(() async {
+    PathProviderPlatform.instance = FakePathProviderPlatform();
+  });
+
   Future<ui.Codec> _basicDecoder(Uint8List bytes,
       {int? cacheWidth, int? cacheHeight, bool? allowUpscaling}) {
     return ui.instantiateImageCodec(bytes,

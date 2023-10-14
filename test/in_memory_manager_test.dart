@@ -1,9 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:paulonia_cache_image/InMemoryManager.dart';
 import 'package:paulonia_cache_image/paulonia_cache_image.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+
+import 'utils.dart';
 
 void main() {
   group('In memory manager functions:', () {
+    setUp(() async {
+      PathProviderPlatform.instance = FakePathProviderPlatform();
+    });
+
     List<String> validUrls = [
       'https://i.imgur.com/jhRBVEp.jpg',
       'https://i.imgur.com/5RhnXjE.jpg',
